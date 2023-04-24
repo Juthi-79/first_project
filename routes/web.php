@@ -20,7 +20,7 @@ Route::get('/', function () {
 });
 
 Route::get('/form',[StudentController::class,'emp']);
-Route::get('/store',[StudentController::class,'store'])->name('store');
+Route::post('/store',[StudentController::class,'store'])->name('store');
 
 // Route::get('/form', function () {
 //     return view('form');
