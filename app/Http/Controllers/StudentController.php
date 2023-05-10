@@ -18,62 +18,110 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-
-        
-        // $validator = Validator::make($request->all(), [
-        //     'roll' => 'required|max:10',
-        //     'name' => 'required|max:200',
-        //     'email' => 'required|max:200',
-        //     'gender' => 'required',
-        //     'dob' => 'required',
-        // ]);
-
-        // if($validator->fails())
-        // {
-        //     return response()->json([
-        //         'status' => 400,
-        //         'errors' =>$validator->messages(),
-        //     ]);
-        // }
-        // else
-        // {
-        //     $id=DB::table('student')
-        //         ->select (DB::raw('NVL(MAX(ID),0)+1 AS ID'))
-        //         ->first();
-
-        //         try{
-        //             $student = new StudentModel();
-        
-        //             $student->id=$id->id;
-                    
-        //             $student->roll = $request->input('roll');
-        //             $student->name = $request->input('name');
-        //             $student->email = $request->input('email');
-        //             $student->gender = $request->input('gender');
-        //             $student->dob = $request->input('dob');
-                    
-        //             $student->save();
-            
-        //             return redirect('form')->with('status', "Inserted Successfully");
-        //         }catch(Exception $e){
-        //             return redirect('form')->with('failed',"operation failed");
-        //         }
-        
-        // }
-
-        $studData = [
-            'roll' => $request->roll,
-            'name' => $request->name,
-            'email' => $request->email,
-            'gender' =>$request->gender,
-            'dob' => $request->dob
-        ];
-
-        StudentModel::create($studData);
+    $studentDT =new StudentModel();
+    if($request->ajax())
+        {
+       try{
+          $studentDT ->roll = $request->roll;
+          $studentDT ->name = $request->name;
+          $studentDT ->email = $request->email;
+          $studentDT ->gender = $request->gender;
+          $studentDT ->dob = $request->dob;
+        $studentDT->save();
+       }catch(Exception $e){
+        return redirect('upload')->with('failed',"operation failed");
+    }
         return response()->json([
             'status' => 200,
         ]);
+    }
+    }
+
+    // handle fetch all students ajax request
+	public function fetchAll() {
+		$student = StudentModel::all();
+		$output = '';
+		if ($student->count() > 0) {
+			$output .= '<table class="table table-striped table-sm text-center align-middle">
+            <thead>
+              <tr>
+                <th>Roll</th>
+                <th>Name</th>
+                <th>E-mail</th>
+                <th>Gender</th>
+                <th>Date Of Birth</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>';
+			foreach ($student as $stud) {
+				$output .= '<tr>
+                <td>' . $stud->roll . '</td>
+                <td>' . $stud->name . '</td>
+                <td>' . $stud->email . '</td>
+                <td>' . $stud->gender . '</td>
+                <td>' . $stud->dob . '</td>
+                <td>
+                  <a href="#" id="edit" class="text-success mx-1 editIcon" data-id="{{$stud->roll }}" data-bs-toggle="modal" data-bs-target="#editEmployeeModal"><i class="fa-regular fa-pen-to-square"></i></i></a>
+
+                  <a href="#" id="roll" data-id="'.$stud->roll.'" class="text-danger mx-1 deleteIcon"><i class="fa-solid fa-trash-can"></i></i></a>
+                </td>
+              </tr>';
+			}
+			$output .= '</tbody></table>';
+			echo $output;
+		} else {
+			echo '<h1 class="text-center text-secondary my-5">No record present in the database!</h1>';
+		}
+	}
+
+    // handle delete student ajax request
+	// 
+
+// public function destroy($roll)
+//     {
+//         StudentModel::find($roll)->delete();
+//         return response()->json(['success' => 'Student Deleted Successfully']);
+//     }
+
+    public function delete($roll){
+        $data = DB::table('STUDENT')
+        ->select('*')
+        ->where('ROLL','=', $roll)
+        ->first();
+        
+        if($request->ajax()){
+            if(!optional($data)->name==null){
+                $DD = DB::table('STUDENT')
+                ->where('ROLL', $roll)
+                ->delete($DD);
+                return redirect('form')->with('delet',"Deleted Successfully");
+            }else{
+                return redirect('form')->with('deletef',"Operation failed");
+            }
+        }else{
+            return redirect('form')->with('deletef',"Operation failed");
+        }
        
     }
 
+    //handle edit student ajax request
+    public function edit(Request $request)
+    {
+        $roll = $request->roll;
+        $stud = StudentModel::find($roll);
+        return response()->json($stud);
+    }
+
+    //handle update student ajax request
+    // public function update(Request $request)
+    // {
+        
+    // }
+
 }
+	
+
+    
+
+
