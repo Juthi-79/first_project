@@ -4,6 +4,10 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\LoanController;
+use App\Http\Controllers\MediaController;
+use App\Http\Controllers\IncrementController;
+use App\Http\Controllers\AttendanceController;
+
 use Illuminate\Support\Facades\Route;
 
 
@@ -49,6 +53,22 @@ Route::get('/destroyDistrict/{district}',[LocationController::class,'destroyDist
 // Route::post('/insertDistrict',[LocationController::class,'insertDistrict'])->name('insertDistrict');
 
 Route::get('/loan', [LoanController::class,'loan'])->name('loan');
-Route::post('/lonestore',[LoanController::class,'storeer'])->name('l.store');
-Route::post('/lonetablestore',[LoanController::class,'storestoretableer'])->name('t.store');
+Route::post('/loansave',[LoanController::class,'storeer'])->name('l.store');
+Route::post('/lonetablestore',[LoanController::class,'storetable'])->name('t.store');
 Route::get('/fetchallloan',[LoanController::class,'fetchAll'])->name('l.fetchAll');
+
+
+Route::get('/getDept/{id}',[LoanController::class,'deptList']);
+Route::get('/getEmp/{id}',[LoanController::class,'empList']);
+Route::get('/designation/{id}',[LoanController::class,'designation']);
+Route::get('/getEmpData/{empno}',[LoanController::class,'getEmpData']);
+Route::get('/getDate/{empno}',[LoanController::class,'getDate']);
+
+Route::get('/media', [MediaController::class,'index'])->name('m.index');
+
+Route::get('/increment', [IncrementController::class,'empno'])->name('inc.index');
+Route::get('/list', [IncrementController::class,'demolist'])->name('d.index');
+Route::get('/getEmpData', [IncrementController::class,'empData'])->name('emp.data');
+Route::get('/tableData/{empId}', [IncrementController::class,'tableData'])->name('t.data');
+
+Route::get('/attnd', [AttendanceController::class,'index'])->name('att.index');

@@ -90,18 +90,19 @@ class StudentController extends Controller
         ->where('ROLL','=', $roll)
         ->first();
         
-        if($request->ajax()){
+        
             if(!optional($data)->name==null){
+                try{
+                    
+                }
                 $DD = DB::table('STUDENT')
-                ->where('ROLL', $roll)
+                ->where('ROLL','=', $roll)
                 ->delete($DD);
                 return redirect('form')->with('delet',"Deleted Successfully");
             }else{
                 return redirect('form')->with('deletef',"Operation failed");
             }
-        }else{
-            return redirect('form')->with('deletef',"Operation failed");
-        }
+        
        
     }
 

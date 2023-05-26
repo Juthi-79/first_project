@@ -29,5 +29,6 @@ class LoanMaster extends Model
         'ref_des_name',
         'new_instt_date',
         'new_period',
+        'company_id'
     ];
 }
